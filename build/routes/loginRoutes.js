@@ -10,31 +10,51 @@ var requireAuth = function (req, res, next) {
     res.send('Not permitted');
 };
 var router = express_1.Router();
-router.get('/login', function (req, res) {
-    res.send("\n        <form method=\"POST\">\n            <div>\n                <label>Email</label>\n                <input name=\"email\" />\n            </div>\n            <div>\n                <label>Password</label>\n                <input name=\"password\" type=\"password\" />\n            </div>\n            <button>Submit</button>\n        </form>\n    ");
-});
-router.post('/login', function (req, res) {
-    var _a = req.body, email = _a.email, password = _a.password;
-    if (email && password) {
-        req.session = { loggedIn: true };
-        res.redirect('/');
-    }
-    else {
-        res.redirect('/');
-    }
-});
-router.get('/', function (req, res) {
-    if (req.session && req.session.loggedIn) {
-        res.send("\n            <div>\n                <div>You are logged in</div>\n                <a href=\"/logout\">Logout</a>\n            </div>\n        ");
-    }
-    else {
-        res.send("\n            <div>\n                <div>You are not logged in</div>\n                <a href=\"/login\">Login</a>\n            </div>\n    ");
-    }
-});
-router.get('/logout', function (req, res) {
-    req.session = { loggedIn: false };
-    res.redirect('/');
-});
+// router.get('/login', (req: Request, res: Response) => {
+//     res.send(`
+//         <form method="POST">
+//             <div>
+//                 <label>Email</label>
+//                 <input name="email" />
+//             </div>
+//             <div>
+//                 <label>Password</label>
+//                 <input name="password" type="password" />
+//             </div>
+//             <button>Submit</button>
+//         </form>
+//     `)
+// });
+// router.post('/login', (req: RequestWithBody, res: Response) => {
+//     const { email, password } = req.body
+//     if (email && password) {
+//         req.session = { loggedIn: true };
+//         res.redirect('/');
+//     } else {
+//         res.redirect('/');
+//     }
+// })
+// router.get('/', (req: Request, res: Response) => {
+//     if (req.session && req.session.loggedIn) {
+//         res.send(`
+//             <div>
+//                 <div>You are logged in</div>
+//                 <a href="/logout">Logout</a>
+//             </div>
+//         `)
+//     } else {
+//         res.send(`
+//             <div>
+//                 <div>You are not logged in</div>
+//                 <a href="/login">Login</a>
+//             </div>
+//     `)
+//     }
+// })
+// router.get('/logout', (req: Request, res: Response) => {
+//     req.session = { loggedIn: false };
+//     res.redirect('/');
+// })
 router.get('/protected', requireAuth, function (req, res) {
     res.send('Welcome to protected route, logged in user');
 });

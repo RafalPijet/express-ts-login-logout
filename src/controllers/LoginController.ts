@@ -1,15 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { controller, get, use } from './decorators';
-
-const exampleUse = (req: Request, res: Response, next: NextFunction) => {
-    console.log('Testing of middleware');
-    next();
-}
+import { controller, get, use, bodyValidator, post } from './decorators';
 
 @controller('/auth')
 class LoginController {
     @get('/login')
-    @use(exampleUse)
     getLogin(req: Request, res: Response): void {
         res.send(`
         <form method="POST">
@@ -24,5 +18,22 @@ class LoginController {
             <button>Submit</button>
         </form>
     `)
+    }
+    @post('/login')
+    @bodyValidator('email', 'password')
+    postLogin(req: Request, res: Response): void {
+        const { email, password } = req.body
+
+        if (email && password) {
+            req.session = { loggedIn: true };
+            res.redirect('/');
+        } else {
+            res.redirect('/');
+        }
+    }
+    @get('/logout')
+    getLogout(req: Request, res: Response): void {
+        req.session = { loggedIn: false };
+        res.redirect('/');
     }
 }
